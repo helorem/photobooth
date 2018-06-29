@@ -7,7 +7,7 @@ import traceback
 
 from Logger import Logger
 from CacheImage import Image
-from Config import Config
+from Config import Config, Strings
 
 class Screen:
     def __init__(self):
@@ -40,6 +40,14 @@ class Screen:
         pygame.mouse.set_visible(False)
         self._set_display()
         self.w, self.h = self.window.get_size()
+
+        # Write loading
+        myfont = pygame.font.SysFont("monospace", 32)
+        label = myfont.render(Strings.get("Loading..."), 1, (255, 255, 0))
+        lw, lh = label.get_rect().size
+        self.window.blit(label, ((self.w - lw) / 2, (self.h - lh) / 2))
+        self.update()
+
         Logger.log_debug("Screen initialized with resolution %dx%d" % (self.w, self.h))
         self.initialized = True
 
