@@ -125,7 +125,7 @@ class SnapScene(Scene):
         if not os.path.isfile(path):
             Logger.log_error("File '%s' was not created" % path)
         else:
-            SnapScene.create_qrcode(os.path.basename(path), os.path.join(ResourceManager.get_instance().get_folder(), "last_qrcode.png"))
+            SnapScene.create_qrcode(os.path.basename(path), "cache/last_qrcode.png")
         elapsed = time.time() - start_time
         to_wait = Config.get("picture_show_delay") - elapsed
         if to_wait > 0:
@@ -137,15 +137,17 @@ class SnapScene(Scene):
         for folder in Config.get("snapshot")["folders"]:
             if os.path.exists(folder):
                 return folder
-        return "."
+	folder = "./photos"
+	if not os.path.exists(folder):
+	    os.makedirs(folder)
+        return folder
 
     @staticmethod
     def create_qrcode(filename, target_file):
-        if not Config.get("desktop_mode", False):
-            # Not working in desktop mode because qrcode is deprecated
-            url = Config.get("url") + filename
-            _, sz, img = qrencode.encode(data=url, level=1)
-            qr_zoom = Config.get("qrcode")["zoom"]
-            img = img.resize((sz * qr_zoom, sz * qr_zoom))
-            img.save(target_file)
+        url = Config.get("url") + filename
+        _, _, img = qrencode.encode(data=url, level=1)
+	w, h = Screen.get_instance().get_size()
+        sz = h / Config.get("qrcode")["screen_height_ratio"]
+        img = img.resize((sz, sz))
+        img.save(target_file)
 

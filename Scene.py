@@ -36,9 +36,17 @@ class FormButton:
         img_file_sel = ResourceManager.get("%s_sel.png" % name)
 
         if img_file and os.path.isfile(img_file):
+            w, h = Screen.get_instance().get_size()
+            screen_ratio = Config.get("form_buttons")["normal"]["screen_height_ratio"]
             self.img = pygame.image.load(img_file)
+            iw, ih = self.img.get_rect().size
+            new_ih = h / screen_ratio
+            self.img = pygame.transform.scale(self.img, ((new_ih * iw) / ih, new_ih))
             if img_file_sel and os.path.isfile(img_file_sel):
                 self.img_sel = pygame.image.load(img_file_sel)
+                iw, ih = self.img_sel.get_rect().size
+                new_ih = h / screen_ratio
+                self.img_sel = pygame.transform.scale(self.img_sel, ((new_ih * iw) / ih, new_ih))
             else:
                 self.img_sel = self.img
         else:

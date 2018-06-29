@@ -7,7 +7,7 @@ photobooth.so: photobooth.c
 	gcc -fPIC -shared -o photobooth.so photobooth.c `pkg-config --cflags --libs python` `pkg-config --cflags --libs sdl` -I/usr/include/SDL
 
 clean:
-	find . -iname *.pyc -exec rm -f {} \;
+	find . -iname "*.pyc" -exec rm -f {} \;
 	rm -f photobooth.so
 
 install:

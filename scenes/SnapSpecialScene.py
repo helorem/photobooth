@@ -63,7 +63,7 @@ class SnapSpecialScene(SnapScene):
             img.adapt_to_screen()
             Scene.show(self, img)
 
-            SnapScene.create_qrcode(filename, ResourceManager.get("last_qrcode.png"))
+            SnapScene.create_qrcode(filename, "cache/last_qrcode.png")
         to_wait = Config.get("picture_show_delay")
         if to_wait > 0:
             time.sleep(to_wait)

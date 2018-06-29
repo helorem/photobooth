@@ -1,7 +1,7 @@
 {
     "other_config" : "/media/PhotoBooth/assets/config.json",
     "desktop_mode" : true, 
-    "font" : "fonts/Champagne & Limousines.ttf",
+    "font" : "fonts/edgeracerital.ttf",
     "serial_name" : "/dev/ttyACM0",
     "serial_wait" : 5,
     "resources_folder" : "/media/PhotoBooth/assets",
@@ -10,10 +10,10 @@
     "url" : "http://photobooth/photos/",
     "halt_delay" : 5,
     "button_margin" : 20,
-    "text_color" : [0, 0, 0],
+    "text_color" : [255, 255, 0],
     "strings_file" : "strings/fr.json",
     "qrcode" : {
-        "zoom" : 6,
+        "screen_height_ratio" : 5,
         "text_size" : 30
     },
     "special_effects" : [
@@ -30,26 +30,27 @@
         ]
     },
     "buttons" : {
-        "text_color" : [0, 0, 0],
+        "text_color" : [255, 255, 0],
         "img" : "button.png",
-        "img_sel" : "button_sel.png",
-        "font" : "fonts/Champagne & Limousines.ttf",
-        "font_size" : 32
+        "font" : "fonts/edgeracerital.ttf",
+        "font_size" : 45
     },
     "form_buttons" : {
         "normal" : {
-            "text_color" : [0, 0, 0],
-            "font" : "fonts/Champagne & Limousines.ttf",
-            "font_size" : 32
+            "screen_height_ratio" : 8,
+            "text_color" : [255, 0, 0],
+            "font" : "fonts/edgeracerital.ttf",
+            "font_size" : 24
         },
         "selected" : {
-            "text_color" : [255, 0, 0],
-            "font" : "fonts/Champagne & Limousines.ttf",
-            "font_size" : 32
+            "screen_height_ratio" : 8,
+            "text_color" : [0, 255, 255],
+            "font" : "fonts/edgeracerital.ttf",
+            "font_size" : 24
         }
     },
     "snapshot" : {
-        "folders" : ["/media/PhotoBooth/photos", "photos"],
+        "folders" : ["/media/PhotoBooth/photos"],
         "w" : 1280,
         "h" : 1024
     },

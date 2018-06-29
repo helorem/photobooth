@@ -48,6 +48,9 @@ class Image:
 
     def save(self):
         self.adapt_to_screen()
+	folder = os.path.dirname(self.filename)
+	if not os.path.exists(folder):
+	    os.makedirs(folder)
         pygame.image.save(self.img, self.filename)
         Logger.log_debug("Save cache file '%s'" % (self.filename))
         if self.yuv_filename:

@@ -30,7 +30,7 @@ class WelcomeScene(Scene):
 
     def show(self):
         Scene.show(self, self.img)
-        qr_path = os.path.join(ResourceManager.get_instance().get_folder(), "last_qrcode.png")
+        qr_path = os.path.join("cache/last_qrcode.png")
         if os.path.exists(qr_path):
             qr = pygame.image.load(qr_path)
             iw, ih = qr.get_size()
