@@ -1,0 +1,60 @@
+{
+    "other_config" : "/media/PhotoBooth/assets/config.json",
+    "desktop_mode" : true, 
+    "font" : "fonts/Champagne & Limousines.ttf",
+    "serial_name" : "/dev/ttyACM0",
+    "serial_wait" : 5,
+    "resources_folder" : "/media/PhotoBooth/assets",
+    "wait_before_snap" : 3,
+    "picture_show_delay" : 3,
+    "url" : "http://photobooth/photos/",
+    "halt_delay" : 5,
+    "button_margin" : 20,
+    "text_color" : [0, 0, 0],
+    "strings_file" : "strings/fr.json",
+    "qrcode" : {
+        "zoom" : 6,
+        "text_size" : 30
+    },
+    "special_effects" : [
+        {"id" : "overlay_mustache.png", "string" : "Mustache"}
+    ],
+    "photomaton" : {
+        "wait" : 2,
+        "template" : "template_photomaton.png",
+        "placeholders" : [
+            {"w" : 625, "h" : 467, "x" :  10, "y" :  10},
+            {"w" : 625, "h" : 467, "x" : 645, "y" :  10},
+            {"w" : 625, "h" : 467, "x" :  10, "y" : 487},
+            {"w" : 625, "h" : 467, "x" : 645, "y" : 487}
+        ]
+    },
+    "buttons" : {
+        "text_color" : [0, 0, 0],
+        "img" : "button.png",
+        "img_sel" : "button_sel.png",
+        "font" : "fonts/Champagne & Limousines.ttf",
+        "font_size" : 32
+    },
+    "form_buttons" : {
+        "normal" : {
+            "text_color" : [0, 0, 0],
+            "font" : "fonts/Champagne & Limousines.ttf",
+            "font_size" : 32
+        },
+        "selected" : {
+            "text_color" : [255, 0, 0],
+            "font" : "fonts/Champagne & Limousines.ttf",
+            "font_size" : 32
+        }
+    },
+    "snapshot" : {
+        "folders" : ["/media/PhotoBooth/photos", "photos"],
+        "w" : 1280,
+        "h" : 1024
+    },
+    "preview" : {
+        "w" : 640,
+        "h" : 480
+    }
+}

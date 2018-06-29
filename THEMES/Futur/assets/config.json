@@ -1,0 +1,43 @@
+{
+    "font" : "fonts/edgeracerital.ttf",
+    "wait_before_snap" : 5,
+    "picture_show_delay" : 3,
+    "button_margin" : 20,
+    "strings_file" : "strings/fr.json",
+    "text_color" : [255, 255, 0],
+    "qrcode" : {
+        "zoom" : 6,
+        "text_size" : 30
+    },
+    "special_effects" : [
+        {"id" : "overlay_mustache.png", "string" : "Mustache"}
+    ],
+    "photomaton" : {
+        "wait" : 2,
+        "template" : "template_photomaton.png",
+        "placeholders" : [
+            {"w" : 625, "h" : 500, "x" :  10, "y" :  10},
+            {"w" : 625, "h" : 500, "x" : 645, "y" :  10},
+            {"w" : 625, "h" : 500, "x" :  10, "y" : 520},
+            {"w" : 625, "h" : 500, "x" : 645, "y" : 520}
+        ]
+    },
+    "buttons" : {
+        "text_color" : [255, 255, 0],
+        "img" : "button.png",
+        "font" : "fonts/edgeracerital.ttf",
+        "font_size" : 45
+    },
+    "form_buttons" : {
+        "normal" : {
+            "text_color" : [255, 0, 0],
+            "font" : "fonts/edgeracerital.ttf",
+            "font_size" : 32
+        },
+        "selected" : {
+            "text_color" : [0, 255, 255],
+            "font" : "fonts/edgeracerital.ttf",
+            "font_size" : 32
+        }
+    }
+}
