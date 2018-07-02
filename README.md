@@ -9,7 +9,7 @@ In the configuration file, there is the property *"resources_folder"*.
 
 If you put an *assets* folder in the *resources_folder*, it will override configurations.
 
-You don't have to rewreite en entire config file : if a property isn ot present, the default config file will Be used.
+You don't have to rewrite en entire config file : if a property is not present, the default config file will Be used.
 
 
 ## Run on desktop
