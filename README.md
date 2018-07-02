@@ -12,7 +12,7 @@ If you put an *assets* folder in the *resources_folder*, it will override config
 You don't have to rewreite en entire config file : if a property isn ot present, the default config file will Be used.
 
 
-## Run on desktop
+## Run on desktop
 
 To test the software without a photobooth, you can start it on your desktop.
 
@@ -25,7 +25,7 @@ In the configuration file, just set
 if you do so, the resolution will be set to 640x480
 A fake camera and a fake serial will be used, which print action on the console instead of doing it.
 
-## Make it work on raspberry
+## Make it work on raspberry
 
 First, run
 
