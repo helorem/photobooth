@@ -26,12 +26,12 @@ class SnapScene(Scene):
 
         self.cheese_img = Screen.get_instance().create_image(self.get_name() + "_cheese")
         if not self.cheese_img.is_cached():
-            img = Screen.create_button(ResourceManager.get("empty.png"),
-                                                    Strings.get("Cheese"),
-                                                    Config.get("text_color"),
-                                                    ResourceManager.get(Config.get("font")),
-                                                    100)
-            self.cheese_img.load_surface(img)
+            base_img = Screen.get_instance().create_empty_image(True)
+            self.cheese_img.load_surface(base_img.img)
+            surf_text = Screen.create_text(Strings.get("Cheese"), ResourceManager.get(Config.get("font")), 100,  Config.get("text_color"))
+            tw, th = surf_text.get_size()
+            bw, bh = self.cheese_img.img.get_size()
+            self.cheese_img.img.blit(surf_text, ((bw - tw) / 2, (bh - th) / 2))
             self.cheese_img.save()
 
         self.wait_img = Screen.get_instance().create_image(self.get_name() + "_wait")
@@ -80,6 +80,8 @@ class SnapScene(Scene):
 
     def _next_step(self):
         if self.shown:
+            if self.current_step > 0:
+                Screen.get_instance().hide_img(self.imgs[self.current_step - 1])
             if self.current_step >= len(self.imgs):
                 self.timer = None
                 self.snap()
@@ -100,6 +102,7 @@ class SnapScene(Scene):
     def _after_shot(self):
         if self.shown:
             self.arduino.flash_off()
+            Screen.get_instance().stop_preview()
             Scene.show(self, self.wait_img)
 
     def snap(self):
@@ -107,7 +110,6 @@ class SnapScene(Scene):
         filename = "%s.jpg" % now
         path = os.path.join(SnapScene.get_folder(), filename)
 
-        Screen.get_instance().stop_preview()
         Scene.show(self, self.cheese_img)
         img = self.camera.snapshot(path, {
                 Camera.CB_BEFORE_SHOT : self._before_shot,

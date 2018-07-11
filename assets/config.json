@@ -1,6 +1,6 @@
 {
     "other_config" : "/media/PhotoBooth/assets/config.json",
-    "desktop_mode" : true, 
+    "desktop_mode" : false, 
     "font" : "fonts/edgeracerital.ttf",
     "serial_name" : "/dev/ttyACM0",
     "serial_wait" : 5,

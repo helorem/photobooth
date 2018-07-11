@@ -1,9 +1,9 @@
 import pygame
-import photobooth
 import time
 import threading
 import io
 import traceback
+import PIL
 
 from Logger import Logger
 from CacheImage import Image
@@ -14,13 +14,14 @@ class Screen:
         self.camera = None
         self.w = 0
         self.h = 0
-        self.preview_size = (Config.get("preview")["w"], Config.get("preview")["h"])
+        #self.preview_size = (Config.get("preview")["w"], Config.get("preview")["h"])
         self.window = None
         self.preview_enabled = False
         self.img = None
-        self.preview_thread = None
+        #self.preview_thread = None
         self.callbacks = {}
         self.initialized = False
+        self.overlays = {}
 
     def get_size(self):
         return (self.w, self.h)
@@ -77,55 +78,28 @@ class Screen:
                 self.window.blit(self.img.get_surface(), (0, 0))
                 if do_update:
                     self.update()
+            elif img:
+                overlay = self.camera.add_overlay(img)
+                self.overlays[img] = overlay
+
+    def hide_img(self, img):
+        if self.preview_enabled:
+            if img in self.overlays:
+                self.overlays[img].close()
+                del self.overlays[img]
 
     def start_preview(self):
         if not self.preview_enabled:
-            self.preview_thread = threading.Thread(target=self._preview_loop)
-            self.preview_thread.start()
-
-    def _preview_loop(self):
-        self.preview_enabled = True
-        try:
-            Logger.log_debug("Preview started")
-            if not Config.get("desktop_mode", False):
-                self.window = pygame.display.set_mode(self.preview_size, 0, 16)
-            overlay = pygame.Overlay(pygame.YV12_OVERLAY, self.preview_size)
-            self.camera.set_resolution(self.preview_size)
-            with io.BytesIO() as stream:
-                """
-                fps_count = 0
-                fps_last_show = time.time()
-                """
-                yuv = bytearray(chr(0) * (self.preview_size[0] * self.preview_size[1] * 3 / 2))
-                self._call_callbacks("on_preview_starts")
-                while self.preview_enabled:
-                    stream.seek(0)
-                    self.camera.capture_preview(stream)
-                    stream.seek(0)
-                    stream.readinto(yuv)
-
-                    yuv_img = self.img.get_yuv()
-                    if yuv_img:
-                        photobooth.overlay_display((overlay, yuv, yuv_img))
-                    else:
-                        photobooth.overlay_display((overlay, yuv, ""))
-
-                    """
-                    fps_count += 1
-                    now = time.time()
-                    if now - fps_last_show >= 2:
-                        print "%.02f fps" % (fps_count / (now - fps_last_show))
-                        fps_count = 0
-                        fps_last_show = time.time()
-                    """
-        except Exception as ex:
-                Logger.log_warning("Preview failed : %s" % str(ex))
-                Logger.log_debug(traceback.format_exc())
+            self.camera.start_preview()
+            self.preview_enabled = True
+            self._call_callbacks("on_preview_starts")
 
     def stop_preview(self):
         if self.preview_enabled:
             self.preview_enabled = False
-            self.preview_thread.join()
+            for overlay in self.overlays.values():
+                overlay.close()
+            self.camera.stop_preview()
             if not Config.get("desktop_mode", False):
                 self._set_display()
             pygame.display.update()
@@ -133,18 +107,12 @@ class Screen:
 
     def create_image(self, img_id, preview=False):
         img = None
-        if preview:
-            img = Image(img_id, self.preview_size, True)
-        else:
-            img = Image(img_id, (self.w, self.h))
+        img = Image(img_id, (self.w, self.h))
         return img
 
     def create_empty_image(self, preview=False):
         img = None
-        if preview:
-            img = Image(None, self.preview_size, True)
-        else:
-            img = Image(None, (self.w, self.h))
+        img = Image(None, (self.w, self.h))
         base_img = pygame.Surface(img.size, pygame.SRCALPHA, 32)
         base_img = base_img.convert_alpha()
         img.load_surface(base_img)

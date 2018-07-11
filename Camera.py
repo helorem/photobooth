@@ -1,7 +1,7 @@
 import time
-import photobooth
 import pygame
-import io
+import numpy as np
+import PIL
 
 from Logger import Logger
 from Config import Config
@@ -18,6 +18,7 @@ class Camera:
     def start(self):
         import picamera
         self.camera = picamera.PiCamera()
+        self.camera.hflip = True # mirror
 
     def stop(self):
         if self.camera:
@@ -26,25 +27,36 @@ class Camera:
     def set_resolution(self, res):
         self.camera.resolution = res
 
-    def capture_preview(self, stream):
-        self.camera.capture(stream, use_video_port=True, format='yuv')
-
     def _callback(self, callbacks, event):
         if event in callbacks:
             callbacks[event]()
 
+    def start_preview(self):
+        self.camera.start_preview()
+
+    def stop_preview(self):
+        self.camera.stop_preview()
+
+    def add_overlay(self, img):
+        pil_img = PIL.Image.open(img.filename)
+        overlay_img = PIL.Image.new('RGBA', (
+            ((pil_img.size[0] + 31) // 32) * 32,
+            ((pil_img.size[1] + 15) // 16) * 16,
+        ))
+        overlay_img.paste(pil_img, (0, 0))
+        overlay = self.camera.add_overlay(overlay_img.tobytes(), overlay_img.size, format="rgba")
+        overlay.alpha = 255
+        overlay.layer = 3
+        return overlay
+
     def snapshot(self, filename, callbacks):
-        yuv = bytearray(self.w * self.h * 3 / 2)
-        rgb = bytearray(self.w * self.h * 3)
-        self.camera.resolution = (self.w, self.h)
-        with io.BytesIO() as stream:
-            self._callback(callbacks, Camera.CB_BEFORE_SHOT)
-            self.camera.capture(stream, format='yuv')
-            self._callback(callbacks, Camera.CB_AFTER_SHOT)
-            stream.seek(0)
-            stream.readinto(yuv)
-        photobooth.yuv2rgb(yuv, rgb, self.w, self.h)
-        img = pygame.image.frombuffer(rgb[0:(self.w * self.h * 3)], (self.w, self.h), 'RGB')
+        from picamera.array import PiRGBArray
+        rawCapture = PiRGBArray(self.camera)
+        self._callback(callbacks, Camera.CB_BEFORE_SHOT)
+        self.camera.capture(rawCapture, format="rgb")
+        self._callback(callbacks, Camera.CB_AFTER_SHOT)
+        rgb = rawCapture.array
+        img = pygame.image.frombuffer(rgb, (self.w, self.h), 'RGB')
         pygame.image.save(img, filename)
         return img
 
@@ -61,12 +73,17 @@ class FakeCamera(Camera):
     def stop(self):
         pass
 
+    def start_preview(self):
+        pass
+
+    def stop_preview(self):
+        pass
+
     def set_resolution(self, res):
         self.resolution = res
 
-    def capture_preview(self, stream):
-        with open("tests/sample_capture_640_480.yuv", "rb") as fd:
-            stream.write(fd.read())
+    def add_overlay(self, overlay_img):
+        pass
 
     def snapshot(self, filename, callbacks):
         self._callback(callbacks, Camera.CB_BEFORE_SHOT)
